@@ -36,16 +36,15 @@ public class CheckInWidgetProvider extends AppWidgetProvider {
 
         for (int appWidgetId : appWidgetIds) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_check_in);
+            views.setTextViewText(R.id.widget_brand, "CHECK IN");
 
             if (inCooldown) {
                 views.setViewVisibility(R.id.widget_title, android.view.View.GONE);
                 views.setViewVisibility(R.id.widget_buttons_container, android.view.View.GONE);
                 views.setViewVisibility(R.id.widget_message, android.view.View.VISIBLE);
-                String msg = lastOkay
-                        ? "Continue being positive. Carry this steady light forward."
-                        : "Take a gentle breath. You're doing the best you can.";
+                String msg = CooldownMessages.getMessage(lastOkay, lastTime);
                 views.setTextViewText(R.id.widget_message, msg);
-                views.setTextColor(R.id.widget_message, lastOkay ? android.graphics.Color.rgb(40, 81, 56) : android.graphics.Color.rgb(81, 67, 116));
+                views.setTextColor(R.id.widget_message, android.graphics.Color.rgb(24, 41, 33));
             } else {
                 views.setViewVisibility(R.id.widget_title, android.view.View.VISIBLE);
                 views.setViewVisibility(R.id.widget_buttons_container, android.view.View.VISIBLE);

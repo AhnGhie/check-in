@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ink">#20211E</color>
-    <color name="muted_ink">#666860</color>
-    <color name="canvas">#F8F8F4</color>
+    <color name="ink">#121816</color>
+    <color name="muted_ink">#52635B</color>
+    <color name="canvas">#F6F9F6</color>
     <color name="card">#FFFFFF</color>
-    <color name="sage">#DDEBDD</color>
-    <color name="sage_ink">#285138</color>
-    <color name="lavender">#EAE4F7</color>
-    <color name="lavender_ink">#514374</color>
-    <color name="line">#E8E8E2</color>
+    <color name="sage">#D0E6D3</color>
+    <color name="sage_ink">#163A2C</color>
+    <color name="sage_subtext">#234D3C</color>
+    <color name="lavender">#E3DEFA</color>
+    <color name="lavender_ink">#3D2F6B</color>
+    <color name="lavender_subtext">#524482</color>
+    <color name="action_card_bg">#EFF3F0</color>
+    <color name="line">#E2EBE4</color>
+
+    <!-- Widget Design Tokens -->
+    <color name="widget_card_bg">#F0F6F2</color>
+    <color name="widget_card_border">#DDE6DF</color>
+    <color name="widget_eyebrow">#163A2C</color>
+    <color name="widget_title">#0E1C16</color>
+    <color name="widget_not_ok_bg">#E3DEFA</color>
+    <color name="widget_not_ok_border">#D3CBF6</color>
+    <color name="widget_not_ok_text">#3D2F6B</color>
+    <color name="widget_ok_bg">#D0E6D3</color>
+    <color name="widget_ok_border">#BFE0C3</color>
+    <color name="widget_ok_text">#163A2C</color>
+    <color name="widget_cooldown_text">#12221A</color>
 </resources>

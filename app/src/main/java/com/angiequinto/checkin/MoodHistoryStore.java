@@ -27,6 +27,25 @@ public final class MoodHistoryStore {
         new Database(context).getWritableDatabase().insertOrThrow(TABLE, null, values);
     }
 
+    public static void deleteLatest(Context context) {
+        SQLiteDatabase db = new Database(context).getWritableDatabase();
+        try (Cursor cursor = db.query(
+                TABLE,
+                new String[] { COLUMN_ID },
+                null,
+                null,
+                null,
+                null,
+                COLUMN_TIME + " DESC",
+                "1"
+        )) {
+            if (cursor.moveToFirst()) {
+                long id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID));
+                db.delete(TABLE, COLUMN_ID + " = ?", new String[] { String.valueOf(id) });
+            }
+        }
+    }
+
     public static List<Entry> loadAll(Context context) {
         List<Entry> entries = new ArrayList<>();
         try (Cursor cursor = new Database(context).getReadableDatabase().query(

@@ -12,11 +12,14 @@ import android.graphics.Color;
 import android.os.Build;
 import android.widget.Toast;
 
+import java.util.List;
+
 /** Handles notification actions and privately records only the mood and local check-in time. */
 public class CheckInReceiver extends BroadcastReceiver {
     public static final String ACTION_REMINDER = "com.angiequinto.checkin.REMINDER";
     public static final String ACTION_OK = "com.angiequinto.checkin.OK";
     public static final String ACTION_NOT_OK = "com.angiequinto.checkin.NOT_OK";
+    public static final String ACTION_UNDO = "com.angiequinto.checkin.UNDO";
 
     private static final String CHANNEL_ID = "mood_check_ins";
     private static final int NOTIFICATION_ID = 1401;
@@ -36,6 +39,14 @@ public class CheckInReceiver extends BroadcastReceiver {
             return;
         }
 
+        if (ACTION_UNDO.equals(action)) {
+            MoodHistoryStore.deleteLatest(context);
+            ReminderScheduler.scheduleNext(context);
+            CheckInWidgetProvider.updateWidgets(context);
+            Toast.makeText(context, "Check-in undone", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (ACTION_OK.equals(action) || ACTION_NOT_OK.equals(action)) {
             NotificationManager manager = context.getSystemService(NotificationManager.class);
             manager.cancel(NOTIFICATION_ID);
@@ -44,16 +55,17 @@ public class CheckInReceiver extends BroadcastReceiver {
             long interval = UserPreferences.getInterval(context);
             long cooldown = Math.max(5 * 60 * 1000L, interval);
             if (lastTime > 0 && (System.currentTimeMillis() - lastTime) < cooldown) {
-                Toast.makeText(context, "You recently checked in. Take a gentle breath.", Toast.LENGTH_SHORT).show();
+                List<MoodHistoryStore.Entry> entries = MoodHistoryStore.loadAll(context);
+                boolean lastOkay = entries.isEmpty() || entries.get(0).okay;
+                Toast.makeText(context, CooldownMessages.getMessage(lastOkay, lastTime), Toast.LENGTH_SHORT).show();
                 CheckInWidgetProvider.updateWidgets(context);
                 return;
             }
 
             boolean okay = ACTION_OK.equals(action);
             MoodHistoryStore.record(context, okay);
-            String message = okay
-                    ? "Continue being positive. Carry this steady light forward."
-                    : "Take a gentle breath. You're doing the best you can.";
+            long recordTime = MoodHistoryStore.getLastCheckInTime(context);
+            String message = CooldownMessages.getMessage(okay, recordTime);
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             CheckInWidgetProvider.updateWidgets(context);
         }
